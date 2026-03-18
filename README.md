@@ -10,6 +10,6 @@ L'applicazione è sviluppata in Java, utilizzando i principi della programmazion
 ## obiettivi:
 Gli obiettivi principali del sistema sono:
 - Gestione strutturata dei pacchi
-- DiÐerenziazione tra utenti base e premium
+- Differenziazione tra utenti base e premium
 - Assegnazione automatica dei pacchi ai corrieri
 - Simulazione del processo di spedizione
