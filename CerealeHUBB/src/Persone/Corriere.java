@@ -1,12 +1,11 @@
+package Persone;
+
 import Pacchetti.Packet;
 
-import java.lang.reflect.Array;
 import java.util.PriorityQueue;
-import java.util.Random;
 
-public class Corriere {
-    private String nome;
-    private String cognome;
+public class Corriere extends Persona {
+
     private String matricola;
     private static int contatore = 0;
     private PriorityQueue<Packet> pacchiAssegnati;
@@ -14,8 +13,7 @@ public class Corriere {
     //COSTRUTTORE:
 
     public Corriere(String nome, String cognome) {
-        this.nome = nome;
-        this.cognome = cognome;
+        super(nome, cognome);
         generaMatricola();
         this.pacchiAssegnati = new PriorityQueue<>();
         contatore++;
