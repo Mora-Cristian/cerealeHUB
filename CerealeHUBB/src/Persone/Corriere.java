@@ -26,7 +26,8 @@ public class Corriere extends Persona {
                     'U','V','W','X','Y','Z'
             };
 
-            int numero = (contatore % 99) + 1;       // numero da 1 a 99
+            int numero = (contatore % 99) + 1;
+            Integer numeroInteger = (Integer) numero;// numero da 1 a 99
             int indiceLettere = contatore / 99;      // conta quante volte cambiano le lettere
 
             int primaLettera = indiceLettere / 26;   // lettera più significativa
@@ -36,7 +37,7 @@ public class Corriere extends Persona {
             primaLettera = primaLettera % 26;
 
             // numero con due cifre: 01, 02, 10, 11, ...
-            String numeroFormattato = String.format("%02d", numero);
+            String numeroFormattato = String.format("%02d", numeroInteger);
 
             this.matricola = "" + alfabeto[primaLettera] + alfabeto[secondaLettera] + numeroFormattato;
     }
