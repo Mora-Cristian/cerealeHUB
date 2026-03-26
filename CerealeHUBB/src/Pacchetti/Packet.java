@@ -1,82 +1,65 @@
 package Pacchetti;
 
-class ErroreNelPacchetto extends RuntimeException {
-    public ErroreNelPacchetto(String messaggio) {
-        super(messaggio);
-        }
-    }
+public abstract class Packet implements Comparable<Packet> {
 
-public abstract class Packet implements Comparable<Packet>{
+    private static int contatoreGlobale = 0;
+
     private int ID;
     private float peso;
     private StatoPacket stato;
     private TipoPacket tipo;
-    private int contatore;
     private float costo;
 
-    //COSTRUTTORE:
-    public Packet(float peso, StatoPacket stato, TipoPacket tipo, int costo) {
-        this.ID = contatore;
+    // Costruttore
+    public Packet(float peso, StatoPacket stato, TipoPacket tipo, float costo) {
+        this.ID = contatoreGlobale++;
         setPeso(peso);
+        setCosto(costo, tipo, peso);
         this.stato = stato;
         this.tipo = tipo;
-        setCosto(costo);
-        contatore++;
     }
 
-    //SETTER:
-    private void setCosto(float costo) {
-        if (costo < 0)
-            throw new ErroreNelPacchetto("Il costo deve essere maggiore di 0");
-        if (peso > 50)
-            costo += 10;
-        if (tipo == TipoPacket.PREMIUM)
-            costo -= 5;
-        this.costo = costo;
-    }
-
-    private void setPeso(float peso){
-        if (peso < 0)
-            throw new ErroreNelPacchetto("Il peso deve essere maggiore di 0");
+    // Setter
+    private void setPeso(float peso) {
+        if (peso < 0) throw new ErroreNelPacchetto("Il peso deve essere maggiore di 0");
         this.peso = peso;
     }
 
-
-    //GETTER:
-    public int getID() {
-        return ID;
+    private void setCosto(float costo, TipoPacket tipo, float peso) {
+        if (costo < 0) throw new ErroreNelPacchetto("Il costo deve essere maggiore di 0");
+        if (peso > 50) costo += 10;
+        if (tipo == TipoPacket.PREMIUM) costo -= 5;
+        this.costo = costo;
     }
 
-    public float getPeso() {
-        return peso;
-    }
+    // Getter
+    public int getID() { return ID; }
+    public float getPeso() { return peso; }
+    public StatoPacket getStato() { return stato; }
+    public TipoPacket getTipo() { return tipo; }
+    public float getCosto() { return costo; }
 
-    public StatoPacket getStato() {
-        return stato;
-    }
-
-    public TipoPacket getTipo() {
-        return tipo;
-    }
-
-    public void cambiaStato(StatoPacket stato){
-        this.stato = stato;
-    }
+    // Cambia stato
+    public void cambiaStato(StatoPacket stato) { this.stato = stato; }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Packet{" +
+                "ID=" + ID +
+                ", peso=" + peso +
+                ", tipo=" + tipo +
+                ", costo=" + costo +
+                ", stato=" + stato +
+                '}';
     }
 
+    // Priorità per PriorityQueue
     @Override
-
-    //PRIORITA' DEI PACCHI
     public int compareTo(Packet altro) {
         return Integer.compare(getValore(this.tipo), getValore(altro.tipo));
     }
 
     private int getValore(TipoPacket tipo) {
-        if (tipo == TipoPacket.PREMIUM) return 0;
-        else return 1;
+        return tipo == TipoPacket.PREMIUM ? 0 : 1;
     }
 }

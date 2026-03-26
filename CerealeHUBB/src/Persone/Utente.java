@@ -4,29 +4,46 @@ import java.util.PriorityQueue;
 import Pacchetti.Packet;
 
 public class Utente extends Persona {
+
     private PriorityQueue<Packet> lista;
     private String via;
     private String numeroCivico;
 
-    public Utente(String nome, String cognome,String via,String numeroCivico) {
+    public Utente(String nome, String cognome, String via, String numeroCivico) {
         super(nome, cognome);
         this.lista = new PriorityQueue<>();
-        this.via  = via;
-        this.numeroCivico= numeroCivico;
+        this.via = via;
+        this.numeroCivico = numeroCivico;
     }
 
-    public void aggiungiPacchetto(Packet p){lista.add(p);}
-    public Packet estraiPacchetto(){
-        if(isVuota()){
-            throw new ErroreNellaPersona("non si puo estrarre un pacchetto se non ci sono");
+    // Aggiunge un pacco
+    public void aggiungiPacchetto(Packet p) {
+        lista.add(p);
+    }
+
+    // Estrae il pacco con priorità più alta
+    public Packet estraiPacchetto() {
+        if (isVuota()) {
+            throw new ErroreNellaPersona("Non si può estrarre: nessun pacchetto presente");
         }
         return lista.poll();
     }
-    public Packet visualizzaPacchetto(){
-        if(isVuota()){
-            throw new ErroreNellaPersona("non si puo visualizzare un pacchetto se non ci sono");
+
+    // Visualizza senza rimuovere
+    public Packet visualizzaPacchetto() {
+        if (isVuota()) {
+            throw new ErroreNellaPersona("Non si può visualizzare: nessun pacchetto presente");
         }
-        return lista.peek();}
-    public boolean isVuota(){return lista.isEmpty();}
-    public int quantiPacchetti(){return lista.size();}
+        return lista.peek();
+    }
+
+    // Controlla se è vuota
+    public boolean isVuota() {
+        return lista.isEmpty();
+    }
+
+    // Numero pacchi
+    public int quantiPacchetti() {
+        return lista.size();
+    }
 }
