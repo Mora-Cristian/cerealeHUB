@@ -13,6 +13,14 @@ public class Utente extends Persona {
         super(nome, cognome);
         this.lista = new PriorityQueue<>();
         this.via = via;
+        setNumeroCivico(numeroCivico);
+    }
+
+    //controllo sul numero civico
+    public void setNumeroCivico(String numeroCivico) {
+        if(!numeroCivico.matches(".*\\d.*")){
+            throw new ErroreNellaPersona("Utente: deve contenere almeno un numero");
+        }
         this.numeroCivico = numeroCivico;
     }
 
@@ -24,7 +32,7 @@ public class Utente extends Persona {
     // Estrae il pacco con priorità più alta
     public Packet estraiPacchetto() {
         if (isVuota()) {
-            throw new ErroreNellaPersona("Non si può estrarre: nessun pacchetto presente");
+            throw new ErroreNellaPersona("Utente: Non si può estrarre: nessun pacchetto presente");
         }
         return lista.poll();
     }
@@ -32,9 +40,18 @@ public class Utente extends Persona {
     // Visualizza senza rimuovere
     public Packet visualizzaPacchetto() {
         if (isVuota()) {
-            throw new ErroreNellaPersona("Non si può visualizzare: nessun pacchetto presente");
+            throw new ErroreNellaPersona("Utente: Non si può visualizzare: nessun pacchetto presente");
         }
         return lista.peek();
+    }
+    //Visualizza tutti i pacchetti
+    public void visualizzaPacchetti(){
+        if (isVuota()) {
+            throw new ErroreNellaPersona("Utente: Non si può visualizzare: nessun pacchetto presente");
+        }
+        for (Packet p : lista) {
+            System.out.println(p);
+        }
     }
 
     // Controlla se è vuota

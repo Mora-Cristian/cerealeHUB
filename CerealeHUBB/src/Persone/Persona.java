@@ -14,4 +14,9 @@ public abstract class Persona {
     public void setNome(String nome) {this.nome = nome;}
     public String getCognome() {return cognome;}
     public void setCognome(String cognome) {this.cognome = cognome;}
+
+    @Override
+    public String toString() {
+        return "sono "+cognome+" "+nome;
+    }
 }
