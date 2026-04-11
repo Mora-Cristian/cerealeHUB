@@ -23,6 +23,15 @@ public class GestioneMagazzino {
         pacchiPerCorriere = new HashMap<>();
     }
 
+    public boolean controllo_utenti(String nome,String cognome){
+        for(Utente i:utenti){
+            if(i.getNome().equalsIgnoreCase(nome)&& i.getCognome().equalsIgnoreCase(cognome)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Registra un utente
     public void registraUtente(Utente utente) {
         utenti.add(utente);
