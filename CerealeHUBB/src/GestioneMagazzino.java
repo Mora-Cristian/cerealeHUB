@@ -9,11 +9,11 @@ import java.util.PriorityQueue;
 
 public class GestioneMagazzino {
 
-    PriorityQueue<Packet> pacchiDaConsegnare;
-    ArrayList<Utente> utenti;
-    ArrayList<Corriere> corrieri;
-    ArrayList<Packet> storico;
-    Map<String, ArrayList<Packet>> pacchiPerCorriere;
+    static PriorityQueue<Packet> pacchiDaConsegnare;
+    static ArrayList<Utente> utenti;
+    static ArrayList<Corriere> corrieri;
+    static ArrayList<Packet> storico;
+    static Map<String, ArrayList<Packet>> pacchiPerCorriere;
 
     public GestioneMagazzino() {
         pacchiDaConsegnare = new PriorityQueue<>();
@@ -22,7 +22,7 @@ public class GestioneMagazzino {
         storico = new ArrayList<>();
         pacchiPerCorriere = new HashMap<>();
     }
-
+    //controlla se ci sono altri utenti con lo stesso nome
     public boolean controllo_utenti(String nome,String cognome){
         for(Utente i:utenti){
             if(i.getNome().equalsIgnoreCase(nome)&& i.getCognome().equalsIgnoreCase(cognome)){
@@ -30,6 +30,18 @@ public class GestioneMagazzino {
             }
         }
         return false;
+    }
+    public Utente accedi_utenti(String nome, String cognome, String psw){
+        for(Utente i : utenti){
+            if(i.getNome().equalsIgnoreCase(nome) &&
+                    i.getCognome().equalsIgnoreCase(cognome)){
+
+                if(i.controlloPsw(psw)){
+                    return i;
+                }
+            }
+        }
+        return null;
     }
 
     // Registra un utente

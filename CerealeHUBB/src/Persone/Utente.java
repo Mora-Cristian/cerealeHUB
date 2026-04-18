@@ -16,7 +16,14 @@ public class Utente extends Persona {
         this.lista = new PriorityQueue<>();
         this.via = via;
         setNumeroCivico(numeroCivico);
-        chiediPsw();
+        aggiungiPsw();
+    }
+    public Utente(String nome, String cognome, String via, String numeroCivico,String psw) {
+        super(nome, cognome);
+        this.lista = new PriorityQueue<>();
+        this.via = via;
+        setNumeroCivico(numeroCivico);
+        setPsw(psw);
     }
 
     //controllo sul numero civico
@@ -32,13 +39,20 @@ public class Utente extends Persona {
         } else if (!psw.matches(".*[A-Z].*")) {
             throw new ErrorePsw("la password deve avere almeno un carattere speciale");
         }else if(!psw.matches(".*[^a-zA-Z0-9].*")){
-            throw new ErrorePsw("la password deve avere almeno un caratettere speciale");
+            throw new ErrorePsw("la password deve avere almeno un carattere speciale");
         }
         this.psw= psw;
     }
 
 
-    public void chiediPsw() {
+    public boolean controlloPsw (String Psw){
+        if(psw == this.psw){
+            return true;
+        }
+        return false;
+    }
+
+    public void aggiungiPsw() {
         Scanner sc = new Scanner(System.in);
         int tentativi = 0;
         boolean valida = false;
@@ -99,5 +113,5 @@ public class Utente extends Persona {
     public int quantiPacchetti() {
         return lista.size();
     }
-    
+
 }
