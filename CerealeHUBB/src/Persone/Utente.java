@@ -9,18 +9,16 @@ import java.util.Scanner;
 
 public class Utente extends Persona {
 
-    private String Psw;
     private String via;
     private String civico;
     private PriorityQueue<Packet> lista;
     // Dichiarazione dello scanner come campo della classe
     private Scanner scanner;
 
-    public Utente(String nome, String cognome, String via, String civico, String password) {
+    public Utente(String nome, String cognome, String via, String civico) {
         super(nome, cognome);
         this.via = via;
         this.civico = civico;
-        this.Psw = password;
         this.lista = new PriorityQueue<>();
         // Inizializzazione dello scanner
         this.scanner = new Scanner(System.in);
@@ -43,11 +41,12 @@ public class Utente extends Persona {
             System.out.print("Tipo (1-Standard, 2-Premium): ");
             int tipo = scanner.nextInt(); scanner.nextLine();
 
-            Packet p;
+            System.out.println("Fragile: True - False");
+            boolean fragile = scanner.nextBoolean(); scanner.nextLine();
             if (tipo == 2) {
-                p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo);
+                p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
             } else {
-                p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo);
+                p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
             }
 
             this.lista.add(p);
@@ -71,29 +70,11 @@ public class Utente extends Persona {
         }
     }
 
-    /**
-     * Modifica la password chiedendo l'input internamente.
-     */
-    public void modificaPassword() {
-        System.out.print("Inserisci la nuova password: ");
-        String nuovaPsw = scanner.nextLine();
-        this.setPsw(nuovaPsw);
-        System.out.println("Password aggiornata correttamente.");
-    }
 
     // --- METODI COMPATIBILI CON GESTIONEMAGAZZINO ---
 
-    public boolean controlloPsw(String psw) {
-        return this.Psw.equals(psw);
-    }
 
-    public String getPsw() {
-        return Psw;
-    }
 
-    public void setPsw(String password) {
-        this.Psw = password;
-    }
 
     public PriorityQueue<Packet> getLista() {
         return lista;

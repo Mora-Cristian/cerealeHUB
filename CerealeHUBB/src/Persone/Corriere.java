@@ -82,6 +82,25 @@ public class Corriere extends Persona {
         return matricola;
     }
 
+    public void consegnaPacco() {
+        // 1. Controllo se il corriere ha effettivamente dei pacchi a bordo
+        if (pacchiAssegnati.isEmpty()) {
+            System.out.println("Il corriere " + matricola + " non ha pacchi da consegnare.");
+            return;
+        }
+
+        // 2. Estrazione (poll rimuove il pacco con priorità maggiore)
+        // Usiamo poll() perché il pacco "esce" fisicamente dal furgone
+        Packet p = pacchiAssegnati.poll();
+
+        // 3. Cambio di stato (fondamentale per lo storico in GestioneMagazzino)
+        p.cambiaStato(StatoPacket.CONSEGNATO);
+
+        System.out.println("Pacco consegnato con successo dal corriere " + matricola + "!");
+        System.out.println("Dettagli pacco: " + p.toString());
+        System.out.println("Spazio rimanente nel furgone: " + (15 - pacchiAssegnati.size()));
+    }
+
     public PriorityQueue<Packet> getPacchiAssegnati() {
         return pacchiAssegnati;
     }
