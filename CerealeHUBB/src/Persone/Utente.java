@@ -9,10 +9,12 @@ import java.util.Scanner;
 
 public class Utente extends Persona {
 
-    private String Psw; // Nome variabile usato in GestioneMagazzino
+    private String Psw;
     private String via;
     private String civico;
-    private PriorityQueue<Packet> lista; // Nome usato in GestioneMagazzino
+    private PriorityQueue<Packet> lista;
+    // Dichiarazione dello scanner come campo della classe
+    private Scanner scanner;
 
     public Utente(String nome, String cognome, String via, String civico, String password) {
         super(nome, cognome);
@@ -20,21 +22,26 @@ public class Utente extends Persona {
         this.civico = civico;
         this.Psw = password;
         this.lista = new PriorityQueue<>();
+        // Inizializzazione dello scanner
+        this.scanner = new Scanner(System.in);
     }
 
-    // --- METODI DI INTERAZIONE (L'utente gestisce se stesso) ---
+    // --- METODI DI INTERAZIONE ---
 
-    public void creaEInviaPacco(Scanner sc) {
+    /**
+     * Aggiunge un pacchetto chiedendo l'input direttamente tramite lo scanner di classe.
+     */
+    public void aggiungiPacchetto() {
         try {
             System.out.println("\n--- NUOVA SPEDIZIONE ---");
             System.out.print("Peso: ");
-            float peso = sc.nextFloat(); sc.nextLine();
+            float peso = scanner.nextFloat(); scanner.nextLine(); // Uso dello scanner interno
 
             System.out.print("Costo: ");
-            int costo = sc.nextInt(); sc.nextLine();
+            int costo = scanner.nextInt(); scanner.nextLine();
 
             System.out.print("Tipo (1-Standard, 2-Premium): ");
-            int tipo = sc.nextInt(); sc.nextLine();
+            int tipo = scanner.nextInt(); scanner.nextLine();
 
             Packet p;
             if (tipo == 2) {
@@ -43,36 +50,43 @@ public class Utente extends Persona {
                 p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo);
             }
 
-            this.lista.add(p); // Aggiunge alla coda che il magazzino poi svuoterà
+            this.lista.add(p);
             System.out.println("Pacco aggiunto alla tua lista!");
         } catch (Exception e) {
             System.out.println("Errore: " + e.getMessage());
-            sc.nextLine();
+            scanner.nextLine(); // Pulisce il buffer in caso di errore
         }
     }
 
-    public void visualizzaMieiPacchi() {
+    public void visualizzaPacchetti() {
         System.out.println("\n--- STATO DEI TUOI PACCHI ---");
         if (lista.isEmpty()) {
             System.out.println("Nessun pacco in attesa.");
             return;
         }
 
-        // Copia per non svuotare la lista vera
         PriorityQueue<Packet> copia = new PriorityQueue<>(this.lista);
         while (!copia.isEmpty()) {
             System.out.println("- " + copia.poll());
         }
     }
 
+    /**
+     * Modifica la password chiedendo l'input internamente.
+     */
+    public void modificaPassword() {
+        System.out.print("Inserisci la nuova password: ");
+        String nuovaPsw = scanner.nextLine();
+        this.setPsw(nuovaPsw);
+        System.out.println("Password aggiornata correttamente.");
+    }
+
     // --- METODI COMPATIBILI CON GESTIONEMAGAZZINO ---
 
-    // Metodo fondamentale per il login in GestioneMagazzino
     public boolean controlloPsw(String psw) {
         return this.Psw.equals(psw);
     }
 
-    // Getter per la password (usato per i controlli regex o login)
     public String getPsw() {
         return Psw;
     }
@@ -81,12 +95,10 @@ public class Utente extends Persona {
         this.Psw = password;
     }
 
-    // Getter per la lista (usato da gm.raccogliPacchiDaUtenti)
     public PriorityQueue<Packet> getLista() {
         return lista;
     }
 
-    // Usato per i report nel magazzino
     public int quantiPacchetti() {
         return lista.size();
     }

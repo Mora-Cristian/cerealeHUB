@@ -72,7 +72,7 @@ public class Main_utente {
                                 new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo) :
                                 new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo);
 
-                        utenteLoggato.aggiungiPacchetto(p);
+                        utenteLoggato.aggiungiPacchetto();
                         System.out.println("Pacco creato.");
                     } catch (Exception e) {
                         System.out.println("Errore: " + e.getMessage());
