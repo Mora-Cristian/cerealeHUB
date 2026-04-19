@@ -77,7 +77,11 @@ public class GestioneMagazzino {
             i++;
         }
     }
-
+    public void visualizzaCorrieri(){
+        for(Corriere r: corrieri){
+            System.out.println(r);
+        }
+    }
     public void visualizzaCorrieriESpedizioni() {
         System.out.println("\n--- STATO SPEDIZIONI (HashMap) ---");
         for (String mat : pacchiPerCorriere.keySet()) {

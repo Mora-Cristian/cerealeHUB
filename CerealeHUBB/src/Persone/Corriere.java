@@ -18,6 +18,7 @@ public class Corriere extends Persona {
         this.capacitaMax = 15;
         generaMatricola();
         contatore++;
+        System.out.println(matricola);
     }
 
     // --- LOGICA DI GESTIONE INTERNA ---
@@ -113,5 +114,10 @@ public class Corriere extends Persona {
         int secondaLettera = indiceLettere % 26;
         String numeroFormattato = String.format("%02d", numero);
         this.matricola = "" + alfabeto[primaLettera] + alfabeto[secondaLettera] + numeroFormattato;
+    }
+
+    @Override
+    public String toString() {
+        return "nome: "+getNome()+", cognome: "+getCognome()+", matricola: "+matricola;
     }
 }

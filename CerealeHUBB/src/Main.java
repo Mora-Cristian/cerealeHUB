@@ -114,7 +114,7 @@ public class Main {
                     gm.visualizzaTuttiUtenti();
                     break;
                 case 2:
-                    gm.visualizzaCorrieriESpedizioni();
+                    gm.visualizzaCorrieri();
                     break;
                 case 3: // CREAZIONE UTENTE
                     System.out.print("Nome: "); String nomeU = scanner.nextLine();

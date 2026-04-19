@@ -32,6 +32,7 @@ public class Utente extends Persona {
     public void aggiungiPacchetto() {
         try {
             System.out.println("\n--- NUOVA SPEDIZIONE ---");
+            Packet p;
             System.out.print("Peso: ");
             float peso = scanner.nextFloat(); scanner.nextLine(); // Uso dello scanner interno
 
@@ -44,9 +45,9 @@ public class Utente extends Persona {
             System.out.println("Fragile: True - False");
             boolean fragile = scanner.nextBoolean(); scanner.nextLine();
             if (tipo == 2) {
-                p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
+                 p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
             } else {
-                p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
+                 p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
             }
 
             this.lista.add(p);

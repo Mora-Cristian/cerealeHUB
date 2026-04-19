@@ -67,7 +67,7 @@ public abstract class Packet implements Comparable<Packet> {
                 ", è fragile "+ fragile +
                 '}';
     }
-    private String isFragile(){
+    private String IsFragile(){
         if (this.fragile)
             return  "si";
         return "no";
