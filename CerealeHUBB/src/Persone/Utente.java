@@ -1,117 +1,93 @@
 package Persone;
 
-import java.util.PriorityQueue;
 import Pacchetti.Packet;
+import Pacchetti.PacketPremium;
+import Pacchetti.PacketStandard;
+import Pacchetti.StatoPacket;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Utente extends Persona {
 
-    private PriorityQueue<Packet> lista;
+    private String Psw; // Nome variabile usato in GestioneMagazzino
     private String via;
-    private String numeroCivico;
-    private String psw;
+    private String civico;
+    private PriorityQueue<Packet> lista; // Nome usato in GestioneMagazzino
 
-    public Utente(String nome, String cognome, String via, String numeroCivico) {
+    public Utente(String nome, String cognome, String via, String civico, String password) {
         super(nome, cognome);
-        this.lista = new PriorityQueue<>();
         this.via = via;
-        setNumeroCivico(numeroCivico);
-        aggiungiPsw();
-    }
-    public Utente(String nome, String cognome, String via, String numeroCivico,String psw) {
-        super(nome, cognome);
+        this.civico = civico;
+        this.Psw = password;
         this.lista = new PriorityQueue<>();
-        this.via = via;
-        setNumeroCivico(numeroCivico);
-        setPsw(psw);
     }
 
-    //controllo sul numero civico
-    public void setNumeroCivico(String numeroCivico) {
-        if(!numeroCivico.matches(".*\\d.*")){
-            throw new ErroreNellaPersona("Utente: deve contenere almeno un numero");
-        }
-        this.numeroCivico = numeroCivico;
-    }
-    public void setPsw(String psw){
-        if(psw.length()< 8){
-            throw new ErrorePsw("la password è troppo corta");
-        } else if (!psw.matches(".*[A-Z].*")) {
-            throw new ErrorePsw("la password deve avere almeno un carattere speciale");
-        }else if(!psw.matches(".*[^a-zA-Z0-9].*")){
-            throw new ErrorePsw("la password deve avere almeno un carattere speciale");
-        }
-        this.psw= psw;
-    }
+    // --- METODI DI INTERAZIONE (L'utente gestisce se stesso) ---
 
+    public void creaEInviaPacco(Scanner sc) {
+        try {
+            System.out.println("\n--- NUOVA SPEDIZIONE ---");
+            System.out.print("Peso: ");
+            float peso = sc.nextFloat(); sc.nextLine();
 
-    public boolean controlloPsw (String Psw){
-        if(psw == this.psw){
-            return true;
-        }
-        return false;
-    }
+            System.out.print("Costo: ");
+            int costo = sc.nextInt(); sc.nextLine();
 
-    public void aggiungiPsw() {
-        Scanner sc = new Scanner(System.in);
-        int tentativi = 0;
-        boolean valida = false;
-        while (tentativi < 3 && !valida) {
-            System.out.print("inserisci password: ");
-            String psw = sc.nextLine();
-            try {
-                setPsw(psw);
-                valida = true;
-            } catch (ErrorePsw e) {
-                tentativi++;
-                System.out.println(e.getMessage());
-                System.out.println("tentativi rimasti: " + (3 - tentativi));
-            }}
-        if (valida) {
-            System.out.println("password accettata!");
-        } else {
-            System.out.println("hai esaurito i tentativi.");
-        }}
+            System.out.print("Tipo (1-Standard, 2-Premium): ");
+            int tipo = sc.nextInt(); sc.nextLine();
 
+            Packet p;
+            if (tipo == 2) {
+                p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo);
+            } else {
+                p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo);
+            }
 
-    // Aggiunge un pacco
-    public void aggiungiPacchetto(Packet p) {
-        lista.add(p);
-    }
-
-    // Estrae il pacco con priorità più alta
-    public Packet estraiPacchetto() {
-        if (isVuota()) {
-            throw new ErroreNellaPersona("Utente: Non si può estrarre: nessun pacchetto presente");
-        }
-        return lista.poll();
-    }
-
-    // Visualizza senza rimuovere
-    public Packet visualizzaPacchetto() {
-        if (isVuota()) {
-            throw new ErroreNellaPersona("Utente: Non si può visualizzare: nessun pacchetto presente");
-        }
-        return lista.peek();
-    }
-    //Visualizza tutti i pacchetti
-    public void visualizzaPacchetti(){
-        if (isVuota()) {
-            throw new ErroreNellaPersona("Utente: Non si può visualizzare: nessun pacchetto presente");
-        }
-        for (Packet p : lista) {
-            System.out.println(p);
+            this.lista.add(p); // Aggiunge alla coda che il magazzino poi svuoterà
+            System.out.println("Pacco aggiunto alla tua lista!");
+        } catch (Exception e) {
+            System.out.println("Errore: " + e.getMessage());
+            sc.nextLine();
         }
     }
 
-    // Controlla se è vuota
-    public boolean isVuota() {
-        return lista.isEmpty();
+    public void visualizzaMieiPacchi() {
+        System.out.println("\n--- STATO DEI TUOI PACCHI ---");
+        if (lista.isEmpty()) {
+            System.out.println("Nessun pacco in attesa.");
+            return;
+        }
+
+        // Copia per non svuotare la lista vera
+        PriorityQueue<Packet> copia = new PriorityQueue<>(this.lista);
+        while (!copia.isEmpty()) {
+            System.out.println("- " + copia.poll());
+        }
     }
 
-    // Numero pacchi
+    // --- METODI COMPATIBILI CON GESTIONEMAGAZZINO ---
+
+    // Metodo fondamentale per il login in GestioneMagazzino
+    public boolean controlloPsw(String psw) {
+        return this.Psw.equals(psw);
+    }
+
+    // Getter per la password (usato per i controlli regex o login)
+    public String getPsw() {
+        return Psw;
+    }
+
+    public void setPsw(String password) {
+        this.Psw = password;
+    }
+
+    // Getter per la lista (usato da gm.raccogliPacchiDaUtenti)
+    public PriorityQueue<Packet> getLista() {
+        return lista;
+    }
+
+    // Usato per i report nel magazzino
     public int quantiPacchetti() {
         return lista.size();
     }
-
 }

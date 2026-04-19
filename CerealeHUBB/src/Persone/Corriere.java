@@ -1,7 +1,9 @@
 package Persone;
 
 import Pacchetti.Packet;
+import Pacchetti.StatoPacket;
 import java.util.PriorityQueue;
+import java.util.Scanner;
 
 public class Corriere extends Persona {
 
@@ -10,72 +12,87 @@ public class Corriere extends Persona {
     private int capacitaMax;
     private PriorityQueue<Packet> pacchiAssegnati;
 
-    // Costruttore
-    public Corriere(String nome, String cognome,int capacitaMax) {
-        super(nome, cognome);
-        pacchiAssegnati = new PriorityQueue<>();
-        generaMatricola();
-        setCapacitaMax(capacitaMax);
-        contatore++;
-    }
-
-    //costruttore con capacita a 5
     public Corriere(String nome, String cognome) {
         super(nome, cognome);
-        pacchiAssegnati = new PriorityQueue<>();
+        this.pacchiAssegnati = new PriorityQueue<>();
+        this.capacitaMax = 15;
         generaMatricola();
-        this.capacitaMax=5;
         contatore++;
     }
 
-    //set capacita (un corriere puo consegnare massimo 15 pacchetti al giorno)
-    public void setCapacitaMax(int capacitaMax) {
-        if(capacitaMax>15){
-            throw new ErroreNellaPersona("Corriere: la capacita giornaliera massima è di 15");
+    // --- LOGICA DI GESTIONE INTERNA ---
+
+    /**
+     * Visualizza i pacchi attualmente nel furgone.
+     * Usa una copia della PriorityQueue per non svuotare quella originale.
+     */
+    public void visualizzaMioCarico() {
+        System.out.println("\n--- CARICO CORRIERE: " + this.matricola + " ---");
+        if (pacchiAssegnati.isEmpty()) {
+            System.out.println("Il furgone è vuoto.");
+            return;
         }
-        this.capacitaMax = capacitaMax;
+
+        // Creiamo una copia per la visualizzazione
+        PriorityQueue<Packet> copia = new PriorityQueue<>(this.pacchiAssegnati);
+        int i = 1;
+        while (!copia.isEmpty()) {
+            System.out.println(i + ") " + copia.poll());
+            i++;
+        }
     }
 
-    // Getter matricola
-    public String getMatricola() {
-        return matricola;
+    /**
+     * Segna come consegnato il pacco con la priorità più alta.
+     */
+    public void consegnaProssimoPacco() {
+        if (pacchiAssegnati.isEmpty()) {
+            System.out.println("Nessun pacco da consegnare.");
+            return;
+        }
+
+        // Estrae il pacco più importante (Premium o più vecchio)
+        Packet p = pacchiAssegnati.poll();
+        p.cambiaStato(StatoPacket.CONSEGNATO);
+
+        System.out.println("Pacco consegnato con successo!");
+        System.out.println("Dettagli: " + p);
     }
 
-    // Getter contatore
-    public static int getContatore() {
-        return contatore;
+    /**
+     * Mostra quanto spazio è rimasto nel mezzo.
+     */
+    public void vediStatoMezzo() {
+        int occupati = pacchiAssegnati.size();
+        System.out.println("\n--- STATO VEICOLO ---");
+        System.out.println("Pacchi a bordo: " + occupati + " / " + capacitaMax);
+        System.out.println("Spazio libero: " + (capacitaMax - occupati));
     }
 
-    // Genera matricola unica
-    private void generaMatricola() {
-        char[] alfabeto = {
-                'A','B','C','D','E','F','G','H','I','J',
-                'K','L','M','N','O','P','Q','R','S','T',
-                'U','V','W','X','Y','Z'
-        };
+    // --- METODI ORIGINALI ---
 
-        int numero = (contatore % 99) + 1;
-        int indiceLettere = contatore / 99;
-
-        int primaLettera = indiceLettere / 26;
-        int secondaLettera = indiceLettere % 26;
-
-        primaLettera = primaLettera % 26;
-        String numeroFormattato = String.format("%02d", numero);
-
-        this.matricola = "" + alfabeto[primaLettera] + alfabeto[secondaLettera] + numeroFormattato;
-    }
-
-    // Assegna un pacco
     public void assegnaPacco(Packet p) {
-        if(pacchiAssegnati.size() > capacitaMax){
-            throw new ErroreNellaPersona("Corriere: troppi pacchi");
+        if (pacchiAssegnati.size() >= capacitaMax) {
+            throw new ErroreNellaPersona("Capacità massima raggiunta per il corriere " + matricola);
         }
         pacchiAssegnati.add(p);
     }
 
-    // Visualizza i pacchi assegnati (opzionale)
+    public String getMatricola() {
+        return matricola;
+    }
+
     public PriorityQueue<Packet> getPacchiAssegnati() {
         return pacchiAssegnati;
+    }
+
+    private void generaMatricola() {
+        char[] alfabeto = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
+        int numero = (contatore % 99) + 1;
+        int indiceLettere = contatore / 99;
+        int primaLettera = (indiceLettere / 26) % 26;
+        int secondaLettera = indiceLettere % 26;
+        String numeroFormattato = String.format("%02d", numero);
+        this.matricola = "" + alfabeto[primaLettera] + alfabeto[secondaLettera] + numeroFormattato;
     }
 }

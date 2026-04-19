@@ -22,7 +22,7 @@ public class GestioneMagazzino {
         storico = new ArrayList<>();
         pacchiPerCorriere = new HashMap<>();
     }
-    //controlla se ci sono altri utenti con lo stesso nome
+
     public boolean controllo_utenti(String nome,String cognome){
         for(Utente i:utenti){
             if(i.getNome().equalsIgnoreCase(nome)&& i.getCognome().equalsIgnoreCase(cognome)){
@@ -74,7 +74,6 @@ public class GestioneMagazzino {
 
     // Assegna i pacchi ai corrieri (a rotazione)
     public void assegnaPacchi() {
-
         if (pacchiDaConsegnare.isEmpty()) {
             System.out.println("Nessun pacco da assegnare");
             return;
@@ -86,25 +85,34 @@ public class GestioneMagazzino {
         }
 
         int i = 0;
+        int tentativiFalliti = 0; // Per evitare loop infiniti se tutti i corrieri sono pieni
 
-        while (!pacchiDaConsegnare.isEmpty()) {
-
+        while (!pacchiDaConsegnare.isEmpty() && tentativiFalliti < corrieri.size()) {
             Corriere corriere = corrieri.get(i % corrieri.size());
-            Packet p = pacchiDaConsegnare.poll();
 
-            corriere.assegnaPacco(p);
+            // Usiamo peek() per guardare il pacco senza rimuoverlo dalla coda finché non siamo sicuri
+            Packet p = pacchiDaConsegnare.peek();
 
-            String matricola = corriere.getMatricola();
+            try {
+                corriere.assegnaPacco(p); // Prova ad assegnare (può lanciare l'eccezione)
+                pacchiDaConsegnare.poll(); // Se non ci sono errori, rimuoviamo il pacco dalla coda del magazzino
 
-            if (pacchiPerCorriere.containsKey(matricola)) {
-                pacchiPerCorriere.get(matricola).add(p);
-            } else {
-                ArrayList<Packet> lista = new ArrayList<>();
-                lista.add(p);
-                pacchiPerCorriere.put(matricola, lista);
+                // Logica dello storico
+                String matricola = corriere.getMatricola();
+                pacchiPerCorriere.computeIfAbsent(matricola, k -> new ArrayList<>()).add(p);
+
+                tentativiFalliti = 0; // Reset dei tentativi se l'assegnazione va a buon fine
+            } catch (RuntimeException e) {
+                // Se il corriere è pieno (capacità > 15), l'eccezione viene catturata qui
+                System.out.println("Salto " + corriere.getMatricola() + ": " + e.getMessage());
+                tentativiFalliti++;
             }
+            i++; // Passa al prossimo corriere nella lista
+        }
 
-            i++;
+        if (!pacchiDaConsegnare.isEmpty()) {
+            System.out.println("Attenzione: sono rimasti " + pacchiDaConsegnare.size() + " pacchi. Tutti i corrieri sono pieni.");
         }
     }
+
 }
