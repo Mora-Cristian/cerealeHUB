@@ -1,0 +1,127 @@
+  			 +------------------------------+
+                         |      <<abstract>> Persona    |
+                         +------------------------------+
+                         | - nome: String               |
+                         | - cognome: String            |
+                         +------------------------------+
+                         | + Persona(nome,cognome)      |
+                         | + getNome(): String          |
+                         | + getCognome(): String       |
+                         +------------------------------+
+                                      ▲
+                                      |
+                                   extends
+                                      |
+               ---------------------------------------------------
+               |                                                 |
+     +------------------------------+               +------------------------------+
+     |            Utente            |               |           Corriere           |
+     +------------------------------+               +------------------------------+
+     | - via: String                |               | - matricola: String          |
+     | - civico: int                |               | - contatore: int (static)    |
+     | - lista: PQ<Packet>          |               | - capacitaMax: int           |
+     | - scanner: Scanner           |               | - pacchiAssegnati: PQ<Packet>|
+     +------------------------------+               +------------------------------+
+     | + Utente(nome,cognome,via,civico)|           | + Corriere(nome,cognome)     |
+     | + aggiungiPacchetto(): void  |               | + assegnaPacco(p: Packet)    |
+     | + visualizzaPacchetti(): void|               | + consegnaPacco(): void      |
+     | + getLista(): PQ<Packet>     |               | + visualizzaMioCarico():void |
+     | + quantiPacchetti(): int     |               | + vediStatoMezzo(): void    |
+     +------------------------------+               | + getMatricola(): String     |
+                                                    | + getPacchiAssegnati(): PQ  |
+                                                    | + toString(): String        |
+                                                    | - generaMatricola(): void   |
+                                                    +------------------------------+
+
+        Utente -------> PacketStandard   (crea)
+        Utente -------> PacketPremium    (crea)
+        Utente -------> Packet           (usa 1..*)
+
+        Corriere -----> Packet           (gestisce 0..*)
+
+
+
+                         +--------------------------------------+
+                         |        <<abstract>> Packet            |
+                         +--------------------------------------+
+                         | - ID: int                            |
+                         | - peso: float                        |
+                         | - costo: float                       |
+                         | - stato: StatoPacket                 |
+                         | - tipo: TipoPacket                   |
+                         | - fragile: boolean                   |
+                         +--------------------------------------+
+                         | + cambiaStato(s: StatoPacket)        |
+                         | + compareTo(p: Packet): int          |
+                         | + getID(): int                       |
+                         | + getPeso(): float                   |
+                         | + getCosto(): float                  |
+                         | + getStato(): StatoPacket            |
+                         +--------------------------------------+
+                                      ▲
+                                      |
+                                   extends
+                                      |
+               ---------------------------------------------------
+               |                                                 |
+     +------------------------------+               +------------------------------+
+     |      PacketStandard          |               |      PacketPremium           |
+     +------------------------------+               +------------------------------+
+     | tipo = STANDARD              |               | tipo = PREMIUM               |
+     +------------------------------+               +------------------------------+
+     | + PacketStandard(...)        |               | + PacketPremium(...)         |
+     +------------------------------+               +------------------------------+
+
+
+
+                         +--------------------------------------+
+                         |        GestioneMagazzino              |
+                         +--------------------------------------+
+                         | - utenti: ArrayList<Utente>          |
+                         | - corrieri: ArrayList<Corriere>      |
+                         | - pacchiDaConsegnare: PQ<Packet>     |
+                         | - pacchiPerCorriere: HashMap<String, |
+                         |   ArrayList<Packet>>                 |
+                         +--------------------------------------+
+                         | + GestioneMagazzino()                |
+                         | + aggiungiUtente(u: Utente): void    |
+                         | + visualizzaTuttiUtenti(): void      |
+                         | + raccogliPacchiDaUtenti(): void     |
+                         | + aggiungiCorriere(c: Corriere):void |
+                         | + assegnaPacchi(): void              |
+                         | + visualizzaCorrieri(): void         |
+                         | + visualizzaCorrieriESpedizioni():void|
+                         | + cercaUtente(n,c): Utente           |
+                         | + cercaCorriere(m): Corriere         |
+                         +--------------------------------------+
+
+        GestioneMagazzino -----> Utente      (1..*)
+        GestioneMagazzino -----> Corriere    (1..*)
+        GestioneMagazzino -----> Packet      (gestisce)
+        GestioneMagazzino -----> StatoPacket (usa)
+
+
+
+          +------------------------------+         +------------------------------+
+          |     <<enum>> StatoPacket     |         |      <<enum>> TipoPacket     |
+          +------------------------------+         +------------------------------+
+          | IN_MAGAZZINO                |         | STANDARD                     |
+          | IN_CONSEGNA                 |         | PREMIUM                      |
+          | CONSEGNATO                  |         +------------------------------+
+          +------------------------------+
+
+
+Errori:
+                 +------------------------------+
+                 |    <<exception>>             |
+                 |   ErroreNellaPersona        |
+                 +------------------------------+
+                 | + ErroreNellaPersona(msg)   |
+                 +------------------------------+
+
+                 +------------------------------+
+                 |    <<exception>>             |
+                 |   ErroreNelPacchetto        |
+                 +------------------------------+
+                 | + ErroreNelPacchetto(msg)   |
+                 +------------------------------+
