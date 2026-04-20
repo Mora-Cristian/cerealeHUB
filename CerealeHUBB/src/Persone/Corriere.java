@@ -23,10 +23,7 @@ public class Corriere extends Persona {
 
     // --- LOGICA DI GESTIONE INTERNA ---
 
-    /**
-     * Visualizza i pacchi attualmente nel furgone.
-     * Usa una copia della PriorityQueue per non svuotare quella originale.
-     */
+
     public void visualizzaMioCarico() {
         System.out.println("\n--- CARICO CORRIERE: " + this.matricola + " ---");
         if (pacchiAssegnati.isEmpty()) {
@@ -43,22 +40,6 @@ public class Corriere extends Persona {
         }
     }
 
-    /**
-     * Segna come consegnato il pacco con la priorità più alta.
-     */
-    public void consegnaProssimoPacco() {
-        if (pacchiAssegnati.isEmpty()) {
-            System.out.println("Nessun pacco da consegnare.");
-            return;
-        }
-
-        // Estrae il pacco più importante (Premium o più vecchio)
-        Packet p = pacchiAssegnati.poll();
-        p.cambiaStato(StatoPacket.CONSEGNATO);
-
-        System.out.println("Pacco consegnato con successo!");
-        System.out.println("Dettagli: " + p);
-    }
 
     /**
      * Mostra quanto spazio è rimasto nel mezzo.
@@ -90,11 +71,9 @@ public class Corriere extends Persona {
             return;
         }
 
-        // 2. Estrazione (poll rimuove il pacco con priorità maggiore)
-        // Usiamo poll() perché il pacco "esce" fisicamente dal furgone
         Packet p = pacchiAssegnati.poll();
 
-        // 3. Cambio di stato (fondamentale per lo storico in GestioneMagazzino)
+        // 3. Cambio di stato
         p.cambiaStato(StatoPacket.CONSEGNATO);
 
         System.out.println("Pacco consegnato con successo dal corriere " + matricola + "!");

@@ -4,37 +4,32 @@ import Pacchetti.Packet;
 import Pacchetti.PacketPremium;
 import Pacchetti.PacketStandard;
 import Pacchetti.StatoPacket;
+
+import java.util.InputMismatchException;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class Utente extends Persona {
 
     private String via;
-    private String civico;
+    private int civico;
     private PriorityQueue<Packet> lista;
-    // Dichiarazione dello scanner come campo della classe
-    private Scanner scanner;
 
-    public Utente(String nome, String cognome, String via, String civico) {
+    public Utente(String nome, String cognome, String via, int civico) {
         super(nome, cognome);
         this.via = via;
         this.civico = civico;
         this.lista = new PriorityQueue<>();
-        // Inizializzazione dello scanner
-        this.scanner = new Scanner(System.in);
     }
 
-    // --- METODI DI INTERAZIONE ---
-
-    /**
-     * Aggiunge un pacchetto chiedendo l'input direttamente tramite lo scanner di classe.
-     */
+    // METODI UTENTE
+    private Scanner scanner = new Scanner(System.in);
     public void aggiungiPacchetto() {
         try {
             System.out.println("\n--- NUOVA SPEDIZIONE ---");
             Packet p;
             System.out.print("Peso: ");
-            float peso = scanner.nextFloat(); scanner.nextLine(); // Uso dello scanner interno
+            float peso = scanner.nextFloat(); scanner.nextLine();
 
             System.out.print("Costo: ");
             int costo = scanner.nextInt(); scanner.nextLine();
@@ -52,9 +47,12 @@ public class Utente extends Persona {
 
             this.lista.add(p);
             System.out.println("Pacco aggiunto alla tua lista!");
-        } catch (Exception e) {
+        } catch (InputMismatchException e) {
+            System.out.println("Errore: Input errato!");
+            scanner.nextLine();
+        } catch (Exception e){
             System.out.println("Errore: " + e.getMessage());
-            scanner.nextLine(); // Pulisce il buffer in caso di errore
+            scanner.nextLine();
         }
     }
 
@@ -70,12 +68,6 @@ public class Utente extends Persona {
             System.out.println("- " + copia.poll());
         }
     }
-
-
-    // --- METODI COMPATIBILI CON GESTIONEMAGAZZINO ---
-
-
-
 
     public PriorityQueue<Packet> getLista() {
         return lista;

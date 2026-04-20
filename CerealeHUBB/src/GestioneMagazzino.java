@@ -17,8 +17,7 @@ public class GestioneMagazzino {
         this.pacchiPerCorriere = new HashMap<>();
     }
 
-    // --- METODI PER UTENTI ---
-
+    //METODI PER UTENTI
     public void aggiungiUtente(Utente u) {
         utenti.add(u);
     }
@@ -36,10 +35,8 @@ public class GestioneMagazzino {
             PriorityQueue<Packet> listaUtente = new PriorityQueue<>(u.getLista());
             while (!listaUtente.isEmpty()) {
                 Packet p = listaUtente.poll();
-                // Importante: prendiamo solo i pacchi che non sono già stati raccolti
                 if (p.getStato() == StatoPacket.IN_MAGAZZINO) {
-                    p.cambiaStato(StatoPacket.IN_CONSEGNA);
-                    pacchiDaConsegnare.add(p);
+                    pacchiDaConsegnare.add(p);  // lo stato rimane IN_MAGAZZINO fino all'assegnazione
                 }
             }
         }
@@ -53,7 +50,10 @@ public class GestioneMagazzino {
     }
 
     public void assegnaPacchi() {
-        if (pacchiDaConsegnare.isEmpty() || corrieri.isEmpty()) return;
+        if (pacchiDaConsegnare.isEmpty() || corrieri.isEmpty()) {
+            System.out.println("Non ci sono pacchi da consegnare!");
+            return;
+        }
 
         int i = 0;
         int tentativiFalliti = 0;
@@ -67,7 +67,7 @@ public class GestioneMagazzino {
                 pacchiDaConsegnare.poll(); // Rimosso solo se accettato
                 p.cambiaStato(StatoPacket.IN_CONSEGNA);
 
-                // Aggiornamento HashMap (Storico)
+                // Aggiornamento Storico
                 pacchiPerCorriere.computeIfAbsent(corriere.getMatricola(), k -> new ArrayList<>()).add(p);
 
                 tentativiFalliti = 0;
@@ -76,6 +76,7 @@ public class GestioneMagazzino {
             }
             i++;
         }
+        System.out.println("Pacchi assegnati!");
     }
     public void visualizzaCorrieri(){
         for(Corriere r: corrieri){
@@ -92,8 +93,7 @@ public class GestioneMagazzino {
         }
     }
 
-    // --- METODI DI RICERCA (PER IL MAIN) ---
-
+    // METODI DI RICERCA
     public Utente cercaUtente(String n, String c) {
         for (Utente u : utenti) {
             if (u.getNome().equalsIgnoreCase(n) && u.getCognome().equalsIgnoreCase(c)) return u;

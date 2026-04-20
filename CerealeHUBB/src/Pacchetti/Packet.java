@@ -56,6 +56,12 @@ public abstract class Packet implements Comparable<Packet> {
     // Cambia stato
     public void cambiaStato(StatoPacket stato) { this.stato = stato; }
 
+    public String isFragileString(){
+        if (this.fragile)
+            return  "si";
+        return "no";
+    }
+
     @Override
     public String toString() {
         return "Packet{" +
@@ -64,14 +70,10 @@ public abstract class Packet implements Comparable<Packet> {
                 ", tipo=" + tipo +
                 ", costo=" + costo +
                 ", stato=" + stato +
-                ", è fragile "+ fragile +
+                 "fragile = " + isFragileString() +
                 '}';
     }
-    private String IsFragile(){
-        if (this.fragile)
-            return  "si";
-        return "no";
-    }
+
     // Priorità per PriorityQueue
     @Override
     public int compareTo(Packet altro) {

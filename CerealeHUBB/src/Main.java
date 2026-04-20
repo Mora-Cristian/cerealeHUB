@@ -1,6 +1,7 @@
 import Persone.*;
 import Pacchetti.*;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Main {
     // Scanner statico accessibile da tutti i metodi della classe
@@ -10,7 +11,7 @@ public class Main {
         GestioneMagazzino gm = new GestioneMagazzino();
 
         // --- DATI DI TEST ---
-        gm.aggiungiUtente(new Utente("Mario", "Rossi", "Via Roma", "10"));
+        gm.aggiungiUtente(new Utente("Mario", "Rossi", "Via Roma", 10));
         gm.aggiungiCorriere(new Corriere("Marco", "Neri"));
 
         int sceltaPrincipale = -1;
@@ -23,8 +24,15 @@ public class Main {
             System.out.println("0. ESCI");
             System.out.print("Seleziona area: ");
 
-            sceltaPrincipale = scanner.nextInt();
-            scanner.nextLine(); // Pulisce il buffer dopo l'invio del numero
+            try {
+                sceltaPrincipale = scanner.nextInt();
+                scanner.nextLine(); // Pulisce il buffer dopo l'invio del numero
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido.");
+                scanner.nextLine(); // pulisce il buffer
+                sceltaPrincipale = -1;
+                continue;
+            }
 
             switch (sceltaPrincipale) {
                 case 1: menuAreaUtente(gm); break;
@@ -36,9 +44,7 @@ public class Main {
         }
     }
 
-    // ==========================================
     //   AREA UTENTE
-    // ==========================================
     private static void menuAreaUtente(GestioneMagazzino gm) {
         System.out.print("Nome: "); String n = scanner.nextLine();
         System.out.print("Cognome: "); String c = scanner.nextLine();
@@ -51,21 +57,26 @@ public class Main {
 
         int scelta = -1;
         while (scelta != 0) {
-            System.out.println("\n--- MENU UTENTE: " + u.getNome() + " ---");
+            System.out.println("\n MENU UTENTE: " + u.getNome());
             System.out.println("1. Crea pacco");
             System.out.println("2. I miei pacchi");
             System.out.println("0. Torna");
-            scelta = scanner.nextInt();
-            scanner.nextLine();
+            try {
+                scelta = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido.");
+                scanner.nextLine();
+                scelta = -1;
+                continue;
+            }
 
             if (scelta == 1) u.aggiungiPacchetto();
             else if (scelta == 2) u.visualizzaPacchetti();
         }
     }
 
-    // ==========================================
     //   AREA CORRIERE
-    // ==========================================
     private static void menuAreaCorriere(GestioneMagazzino gm) {
         System.out.print("Matricola: ");
         String mat = scanner.nextLine();
@@ -78,36 +89,50 @@ public class Main {
 
         int scelta = -1;
         while (scelta != 0) {
-            System.out.println("\n--- MENU CORRIERE: " + c.getMatricola() + " ---");
-            System.out.println("1. Carico attuale (Priority)");
-            System.out.println("2. Consegna prossimo");
+            System.out.println("\nMENU CORRIERE: " + c.getMatricola());
+            System.out.println("1. Stato mezzo (Priority)");
+            System.out.println("2. Carico attuale");
+            System.out.println("3. Consegna pacco");
             System.out.println("0. Torna");
-            scelta = scanner.nextInt();
-            scanner.nextLine();
+            try {
+                scelta = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido.");
+                scanner.nextLine();
+                scelta = -1;
+                continue;
+            }
 
             if (scelta == 1) c.vediStatoMezzo();
-            else if (scelta == 2) c.consegnaPacco();
+            else if (scelta == 3) c.consegnaPacco();
+            else if (scelta == 2) c.visualizzaMioCarico();
         }
     }
 
-    // ==========================================
     //   AREA MAGAZZINO (ADMIN)
-    // ==========================================
     private static void menuAreaMagazzino(GestioneMagazzino gm) {
         int scelta = -1;
         while (scelta != 0) {
-            System.out.println("\n--- PANNELLO AMMINISTRATORE ---");
+            System.out.println("\nPANNELLO AMMINISTRATORE");
             System.out.println("1. Visualizza tutti gli Utenti");
             System.out.println("2. Visualizza tutti i Corrieri");
-            System.out.println("3. CREA NUOVO UTENTE");   // Nuova opzione
-            System.out.println("4. CREA NUOVO CORRIERE"); // Nuova opzione
+            System.out.println("3. CREA NUOVO UTENTE");
+            System.out.println("4. CREA NUOVO CORRIERE");
             System.out.println("5. RACCOGLI pacchi dagli utenti");
             System.out.println("6. ASSEGNA pacchi ai corrieri");
             System.out.println("7. Visualizza Stato Generale (HashMap)");
             System.out.println("0. Torna");
             System.out.print("Scelta: ");
-            scelta = scanner.nextInt();
-            scanner.nextLine(); // Pulisce il buffer
+            try {
+                scelta = scanner.nextInt();
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Inserisci un numero valido.");
+                scanner.nextLine();
+                scelta = -1;
+                continue;
+            }
 
             switch (scelta) {
                 case 1:
@@ -120,7 +145,16 @@ public class Main {
                     System.out.print("Nome: "); String nomeU = scanner.nextLine();
                     System.out.print("Cognome: "); String cognU = scanner.nextLine();
                     System.out.print("Indirizzo: "); String indU = scanner.nextLine();
-                    System.out.print("Civico: "); String civU = scanner.nextLine();
+                    System.out.print("Civico: ");
+                    int civU;
+                    try {
+                        civU = scanner.nextInt();
+                        scanner.nextLine();
+                    } catch (InputMismatchException e) {
+                        System.out.println("Inserisci un numero ");
+                        scanner.nextLine();
+                        continue;
+                    }
 
                     Utente nuovoUtente = new Utente(nomeU, cognU, indU, civU);
                     gm.aggiungiUtente(nuovoUtente);

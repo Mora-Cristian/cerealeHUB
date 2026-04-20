@@ -8,6 +8,3 @@ public class ErroreNellaPersona extends RuntimeException {
     }
 }
 
-class ErrorePsw extends InputMismatchException{
-    public ErrorePsw(String message){super(message);}
-}
