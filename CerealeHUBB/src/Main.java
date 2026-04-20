@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 
 public class Main {
-    // Scanner statico accessibile da tutti i metodi della classe
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -26,10 +25,10 @@ public class Main {
 
             try {
                 sceltaPrincipale = scanner.nextInt();
-                scanner.nextLine(); // Pulisce il buffer dopo l'invio del numero
+                scanner.nextLine();
             } catch (InputMismatchException e) {
                 System.out.println("Inserisci un numero valido.");
-                scanner.nextLine(); // pulisce il buffer
+                scanner.nextLine();
                 sceltaPrincipale = -1;
                 continue;
             }
@@ -141,7 +140,7 @@ public class Main {
                 case 2:
                     gm.visualizzaCorrieri();
                     break;
-                case 3: // CREAZIONE UTENTE
+                case 3: // CREAZIONE UTENTE 
                     System.out.print("Nome: "); String nomeU = scanner.nextLine();
                     System.out.print("Cognome: "); String cognU = scanner.nextLine();
                     System.out.print("Indirizzo: "); String indU = scanner.nextLine();

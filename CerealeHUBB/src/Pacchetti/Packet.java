@@ -74,7 +74,7 @@ public abstract class Packet implements Comparable<Packet> {
                 '}';
     }
 
-    // Priorità per PriorityQueue
+
     @Override
     public int compareTo(Packet altro) {
         return Integer.compare(getValore(this.tipo), getValore(altro.tipo));

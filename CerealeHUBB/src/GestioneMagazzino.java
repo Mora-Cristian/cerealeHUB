@@ -31,12 +31,11 @@ public class GestioneMagazzino {
 
     public void raccogliPacchiDaUtenti() {
         for (Utente u : utenti) {
-            // Copia per non svuotare la lista originale dell'utente
             PriorityQueue<Packet> listaUtente = new PriorityQueue<>(u.getLista());
             while (!listaUtente.isEmpty()) {
                 Packet p = listaUtente.poll();
                 if (p.getStato() == StatoPacket.IN_MAGAZZINO) {
-                    pacchiDaConsegnare.add(p);  // lo stato rimane IN_MAGAZZINO fino all'assegnazione
+                    pacchiDaConsegnare.add(p);
                 }
             }
         }
@@ -64,7 +63,7 @@ public class GestioneMagazzino {
 
             try {
                 corriere.assegnaPacco(p);
-                pacchiDaConsegnare.poll(); // Rimosso solo se accettato
+                pacchiDaConsegnare.poll();
                 p.cambiaStato(StatoPacket.IN_CONSEGNA);
 
                 // Aggiornamento Storico

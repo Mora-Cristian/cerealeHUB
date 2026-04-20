@@ -41,9 +41,9 @@ public class Corriere extends Persona {
     }
 
 
-    /**
-     * Mostra quanto spazio è rimasto nel mezzo.
-     */
+
+    //  Mostra quanto spazio è rimasto nel mezzo.
+
     public void vediStatoMezzo() {
         int occupati = pacchiAssegnati.size();
         System.out.println("\n--- STATO VEICOLO ---");
@@ -65,7 +65,7 @@ public class Corriere extends Persona {
     }
 
     public void consegnaPacco() {
-        // 1. Controllo se il corriere ha effettivamente dei pacchi a bordo
+
         if (pacchiAssegnati.isEmpty()) {
             System.out.println("Il corriere " + matricola + " non ha pacchi da consegnare.");
             return;
@@ -73,7 +73,7 @@ public class Corriere extends Persona {
 
         Packet p = pacchiAssegnati.poll();
 
-        // 3. Cambio di stato
+
         p.cambiaStato(StatoPacket.CONSEGNATO);
 
         System.out.println("Pacco consegnato con successo dal corriere " + matricola + "!");
