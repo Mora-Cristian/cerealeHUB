@@ -34,12 +34,12 @@ public class Utente extends Persona {
             System.out.print("Costo: ");
             int costo = scanner.nextInt(); scanner.nextLine();
 
-            System.out.print("Tipo (1-Standard, 2-Premium): ");
+            System.out.print("Tipo (1-premium, qualunque valore - standard ): ");
             int tipo = scanner.nextInt(); scanner.nextLine();
 
             System.out.println("Fragile: True - False");
             boolean fragile = scanner.nextBoolean(); scanner.nextLine();
-            if (tipo == 2) {
+            if (tipo == 1) {
                  p = new PacketPremium(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
             } else {
                  p = new PacketStandard(peso, StatoPacket.IN_MAGAZZINO, costo, fragile);
